@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: agendamentos_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: agendamentos_db
+      MYSQL_USER: user_agendamento
+      MYSQL_PASSWORD: user123
+    ports:
+      - "3308:3306"
+    volumes:
+     
+      - ./mysql-data:/var/lib/mysql
+    cap_add:
+      - SYS_NICE 
+
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
