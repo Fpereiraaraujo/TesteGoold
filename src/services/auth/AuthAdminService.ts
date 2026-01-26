@@ -34,7 +34,7 @@ class AuthAdminService {
         email: user.email,
         role: user.role
       },
-      process.env.JWT_SECRET || "seusegredo123", 
+      process.env.JWT_SECRET || "tokensecreto", 
       {
         subject: user.id.toString(),
         expiresIn: "1d"

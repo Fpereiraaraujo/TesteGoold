@@ -1,39 +1,39 @@
-// import { NextFunction, Request, Response } from 'express';
-// import { verify } from 'jsonwebtoken';
+import { NextFunction, Request, Response } from 'express';
+import { verify } from 'jsonwebtoken';
 
-// interface IPayload {
-//   sub: string; // O ID do usuário que guardamos no token
-// }
+interface IPayload {
+  sub: string;
+}
 
-// export function isAuthenticated(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ){
+export function isAuthenticated(
+  req: Request,
+  res: Response,
+  next: NextFunction
+){
+  const authToken = req.headers.authorization;
 
+  if(!authToken){
+    console.log("DEBUG: Sem token no cabeçalho");
+    return res.status(401).end();
+  }
 
-//   const authToken = req.headers.authorization;
+  const [, token] = authToken.split(" ");
 
-//   if(!authToken){
-//     return res.status(401).end(); 
-//   }
+  try{
+    const { sub } = verify(
+      token,
+      process.env.JWT_SECRET || "tokensecreto" 
+    ) as IPayload;
 
- 
-//   const [, token] = authToken.split(" ");
-
-//   try{
-//     // 3. Validar o token
-//     const { sub } = verify(
-//       token,
-//       process.env.JWT_SECRET || "seusegredo123" 
-//     ) as IPayload;
+    console.log("DEBUG: Token decodificado, ID:", sub); 
 
     
-//     req.user_id = sub;
+    req.user_id = sub;
 
-//     return next(); 
+    return next();
 
-//   }catch(err){
-//     return res.status(401).end();
-//   }
-// }
+  }catch(err){
+    console.log("DEBUG: Erro ao validar token:", err); 
+    return res.status(401).end();
+  }
+}
