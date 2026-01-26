@@ -8,6 +8,10 @@ import { CreateClientController } from '../controllers/user/CreateClientControll
 import { isAuthenticated } from '../middlewares/isAuthenticated';
 import { ListMyLogsController } from '../controllers/log/ListMyLogsController';
 import Log from '../models/Log';
+import { DetailUserController } from '../controllers/user/DetailUserController';
+import { UpdateUserController } from '../controllers/user/UpdateUserController';
+import { ListClientsController } from '../controllers/user/ListClientsController';
+import { ListAllLogsController } from '../controllers/log/ListAllLogsController';
 
 
 
@@ -20,26 +24,17 @@ const createUserController = new CreateUserController();
 const createClientController = new CreateClientController();
 const listMyAppointmentsController = new ListMyAppointmentsController();
 const listMyLogsController = new ListMyLogsController();
+const detailUserController = new DetailUserController();
+const updateUserController = new UpdateUserController();
+const listClientsController = new ListClientsController();
+const listAllLogsController = new ListAllLogsController();
+
 
 
 routes.post("/login", (req, res) => authAdminController.handle(req, res));
 routes.post("/client/login", (req, res) => authAdminController.handle(req, res)); 
 routes.post("/users", (req, res) => createUserController.handle(req, res));
 routes.post("/client/register", (req, res) => createClientController.handle(req, res)); 
-
-// routes.get("/fix-logs", async (req, res) => {
-//   try {
-//     // O comando .sync() cria a tabela se ela não existir
-//     await Log.sync({ force: false }); 
-    
-//     return res.send("<h1>Sucesso! Tabela 'logs' criada pelo Sequelize.</h1>");
-//   } catch (erro: any) {
-//     return res.status(500).json({ 
-//         mensagem: "Erro ao criar tabela logs",
-//         erro_tecnico: erro.message 
-//     });
-//   }
-// });
 
 
 
@@ -67,6 +62,21 @@ routes.get(
   "/logs/me", 
   isAuthenticated, 
   (req, res) => listMyLogsController.handle(req, res)
+);
+
+routes.get("/me", isAuthenticated, (req, res) => detailUserController.handle(req, res)); 
+routes.put("/me", isAuthenticated, (req, res) => updateUserController.handle(req, res));
+
+routes.get(
+  "/clients", 
+  isAuthenticated, 
+  (req, res) => listClientsController.handle(req, res)
+);
+
+routes.get(
+  "/logs", 
+  isAuthenticated, 
+  (req, res) => listAllLogsController.handle(req, res)
 );
 
 export { routes };

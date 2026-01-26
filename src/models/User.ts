@@ -5,10 +5,16 @@ import Appointment from './Appointment';
 export interface UserAttributes {
   id: number;
   name: string;
-  surname?: string; // Novo
+  surname?: string;
   email: string;
   password_hash: string;
-  zip_code?: string; // Novo
+  zip_code?: string;
+  address?: string;
+  number?: string;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
   role: 'admin' | 'client';
   status: boolean;
   createdAt?: Date;
@@ -20,10 +26,16 @@ export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
   public name!: string;
-  public surname!: string; // Novo
+  public surname!: string;
   public email!: string;
   public password_hash!: string;
-  public zip_code!: string; // Novo
+  public zip_code!: string;
+  public address!: string;
+  public number!: string;
+  public complement!: string;
+  public neighborhood!: string;
+  public city!: string;
+  public state!: string;
   public role!: 'admin' | 'client';
   public status!: boolean;
 
@@ -46,7 +58,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    surname: { // Novo
+    surname: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -58,9 +70,32 @@ User.init(
     password_hash: {
       type: DataTypes.STRING,
       allowNull: false,
-      // Lembre-se: removemos o 'field: password' porque sua coluna no banco já chama password_hash
     },
-    zip_code: { // Novo
+    zip_code: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    number: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    complement: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    neighborhood: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    state: {
       type: DataTypes.STRING,
       allowNull: true,
     },
