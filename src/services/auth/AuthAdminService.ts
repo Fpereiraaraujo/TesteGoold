@@ -1,11 +1,15 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import User from '../../models/User'; 
+import { CreateLogService } from '../log/CreateLogService'; 
+
 
 interface IAuthRequest {
   email: string;
   password: string;
 }
+
+
 
 class AuthAdminService {
   async execute({ email, password }: IAuthRequest) {
@@ -40,6 +44,15 @@ class AuthAdminService {
         expiresIn: "1d"
       }
     );
+
+
+    const createLogService = new CreateLogService();
+    await createLogService.execute({
+      user_id: user.id,
+      action: "Login",
+      module: "Minha Conta",
+      details: "Usuário realizou login no sistema"
+    });
 
  
     return {

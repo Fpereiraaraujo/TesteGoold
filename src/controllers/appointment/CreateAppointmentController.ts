@@ -5,9 +5,7 @@ import Appointment from '../../models/Appointment';
 import { User } from '../../models/User';
 import { Room } from '../../models/Room';
 
-// --------------------------------------------------------
-// 1. LISTAGEM (Mantenha esta para o ADMIN)
-// --------------------------------------------------------
+
 export class ListAppointmentsController {
     async handle(req: Request, res: Response) {
         try {
@@ -25,39 +23,30 @@ export class ListAppointmentsController {
     }
 }
 
-// --------------------------------------------------------
-// 2. CRIAÇÃO (Esta é a que mudamos para o CLIENTE)
-// --------------------------------------------------------
+
 export class CreateAppointmentController {
     
     public async handle(req: Request, res: Response) {
         try {
             const { body } = req;
             
-            // MUDANÇA 1: Removemos o 'client_id' daqui. 
-            // O cliente envia apenas Sala, Data e Notas.
             const createAppointmentBodySchema = z.object({
-                // client_id: z.number(),  <-- REMOVIDO
                 room_id: z.number(),
                 date_time: z.coerce.date(),
                 notes: z.string().optional()
             });
 
             const bodyZod = createAppointmentBodySchema.parse(body);
-
-            // MUDANÇA 2: Pegamos o ID do token
-            // O middleware 'isAuthenticated' colocou o user_id dentro do req
+          
+    
             const userIdFromToken = req.user_id; 
 
-            console.log("ID RECUPERADO DO TOKEN:", userIdFromToken);
-            console.log("TIPO DO ID:", typeof userIdFromToken);
-
+          
             const createAppointmentUseCase = await makeCreateAppointmentUseCase();
 
-            // MUDANÇA 3: Injetamos o ID manualmente na chamada do useCase
             const result = await createAppointmentUseCase.execute({
-                ...bodyZod, // Espalha room_id, date_time, notes
-                client_id: Number(userIdFromToken) // Adiciona o ID seguro
+                ...bodyZod, 
+                client_id: Number(userIdFromToken) 
             });
 
             return res.status(201).json({
@@ -88,19 +77,18 @@ export class CreateAppointmentController {
     }
 }
 
-// Controller para o Cliente ver SÓ OS DELE
+
 export class ListMyAppointmentsController {
     async handle(req: Request, res: Response) {
         try {
-            const client_id = req.user_id; // Pega o ID do token
+            const client_id = req.user_id; 
 
             const appointments = await Appointment.findAll({
                 where: {
-                    client_id: Number(client_id) // <--- O FILTRO IMPORTANTE
+                    client_id: Number(client_id)
                 },
                 include: [
                     { model: Room, as: 'room', attributes: ['name'] },
-                    // Não precisa incluir User/Client, pois ele já sabe quem ele é
                 ],
                 order: [['date_time', 'DESC']]
             });

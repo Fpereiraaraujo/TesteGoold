@@ -31,7 +31,7 @@ class CreateClientService {
       email: email,
       password_hash: passwordHash,
       zip_code: zip_code,
-      role: 'client', // Força ser cliente
+      role: 'client', 
       status: true
     });
 
