@@ -1,47 +1,40 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import {sequelize} from '../config/database'; // Sua conexão
-import  Appointment  from './Appointment'; // Importamos para a associação
+import { sequelize } from '../config/database'; 
+import Appointment from './Appointment';
 
-// 1. Interface: Todos os atributos que existem no banco
 export interface UserAttributes {
   id: number;
   name: string;
+  surname?: string; // Novo
   email: string;
   password_hash: string;
-  address?: string; // '?' pois pode ser nulo se não for obrigatório
+  zip_code?: string; // Novo
   role: 'admin' | 'client';
   status: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// 2. Interface de Criação: Quais campos são opcionais ao criar um novo User?
-// id (auto-increment), role (tem default), status (tem default), datas (automáticas)
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'role' | 'status' | 'address'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'role' | 'status'> {}
 
-// 3. A Classe do Model
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  
   public id!: number;
   public name!: string;
+  public surname!: string; // Novo
   public email!: string;
   public password_hash!: string;
-  public address!: string;
+  public zip_code!: string; // Novo
   public role!: 'admin' | 'client';
   public status!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  // Associação
   static associate() {
-    // Um usuário tem muitos agendamentos
-    // Nota: O 'as' deve bater com o que você usa no 'include' do Repository
     User.hasMany(Appointment, { foreignKey: 'client_id', as: 'appointments' });
   }
 }
 
-// 4. Inicialização
 User.init(
   {
     id: {
@@ -53,6 +46,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    surname: { // Novo
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -61,10 +58,11 @@ User.init(
     password_hash: {
       type: DataTypes.STRING,
       allowNull: false,
+      // Lembre-se: removemos o 'field: password' porque sua coluna no banco já chama password_hash
     },
-    address: {
+    zip_code: { // Novo
       type: DataTypes.STRING,
-      allowNull: true, // Pode ser nulo
+      allowNull: true,
     },
     role: {
       type: DataTypes.ENUM('admin', 'client'),
@@ -76,8 +74,10 @@ User.init(
     },
   },
   {
-    sequelize, // Instância da conexão
+    sequelize,
     tableName: 'users',
     modelName: 'User',
   }
 );
+
+export default User;
