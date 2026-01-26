@@ -16,12 +16,13 @@ export interface UserAttributes {
   city?: string;
   state?: string;
   role: 'admin' | 'client';
+  isAdmin?: boolean; 
   status: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'role' | 'status'> {}
+export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'role' | 'status' | 'isAdmin'> {}
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
@@ -37,6 +38,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   public city!: string;
   public state!: string;
   public role!: 'admin' | 'client';
+  public isAdmin!: boolean;
   public status!: boolean;
 
   public readonly createdAt!: Date;
@@ -102,6 +104,12 @@ User.init(
     role: {
       type: DataTypes.ENUM('admin', 'client'),
       defaultValue: 'client',
+    },
+    
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
     },
     status: {
       type: DataTypes.BOOLEAN,
