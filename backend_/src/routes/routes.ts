@@ -13,6 +13,7 @@ import { UpdateUserController } from '../controllers/user/UpdateUserController';
 import { ListClientsController } from '../controllers/user/ListClientsController';
 import { ListAllLogsController } from '../controllers/log/ListAllLogsController';
 import { UpdateAppointmentStatusController } from '../controllers/appointment/UpdateAppointmentStatusController';
+import { UpdateRoomController } from '../controllers/room/UpdateRoomController';
 
 
 
@@ -30,6 +31,7 @@ const updateUserController = new UpdateUserController();
 const listClientsController = new ListClientsController();
 const listAllLogsController = new ListAllLogsController();
 const updateAppointmentStatusController = new UpdateAppointmentStatusController();
+const updateRoomController = new UpdateRoomController();
 
 
 
@@ -86,5 +88,7 @@ routes.put(
   isAuthenticated, 
   (req, res) => updateAppointmentStatusController.handle(req, res)
 );
+
+routes.put('/rooms/:room_id', isAuthenticated, (req, res) => updateRoomController.handle(req, res));
 
 export { routes };

@@ -1,12 +1,16 @@
-import User from '../../models/User';
+import User from "../../models/User";
 
 class ListClientsService {
   async execute() {
+
     const clients = await User.findAll({
       where: {
         role: 'client' 
       },
-      attributes: ['id', 'name', 'surname', 'email', 'zip_code', 'city', 'status', 'createdAt'], 
+      attributes: [
+        'id', 'name', 'email', 'status', 'createdAt', 
+        'address', 'number', 'neighborhood', 'city', 'state' 
+      ], 
       order: [['createdAt', 'DESC']]
     });
 

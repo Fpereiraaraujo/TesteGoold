@@ -1,10 +1,12 @@
-import { Request, Response } from 'express';
-import { ListAllLogsService } from '../../services/log/ListAllLogsService';
+import { Request, Response } from "express";
+import { ListAllLogsService } from "../../services/log/ListAllLogsService";
 
 class ListAllLogsController {
   async handle(req: Request, res: Response) {
-    const service = new ListAllLogsService();
-    const logs = await service.execute();
+    const listAllLogsService = new ListAllLogsService();
+
+    const logs = await listAllLogsService.execute();
+
     return res.json(logs);
   }
 }

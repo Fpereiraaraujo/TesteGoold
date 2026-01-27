@@ -1,14 +1,15 @@
-import Log from '../../models/Log';
-import User from '../../models/User';
+import Log from "../../models/Log";
+import User from "../../models/User";
 
 class ListAllLogsService {
   async execute() {
+   
     const logs = await Log.findAll({
       include: [
         {
-          model: User, 
+          model: User,
           as: 'user', 
-          attributes: ['name', 'email', 'role'] 
+          attributes: ['id', 'name', 'email']
         }
       ],
       order: [['createdAt', 'DESC']] 

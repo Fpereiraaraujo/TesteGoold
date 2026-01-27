@@ -1,7 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize'; 
 import { sequelize } from '../config/database';
-import { User } from './User';
-
+import { User } from './User'; 
 
 export interface LogAttributes {
   id: number;
@@ -12,7 +11,6 @@ export interface LogAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 
 export interface LogCreationAttributes extends Optional<LogAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
@@ -27,6 +25,7 @@ export class Log extends Model<LogAttributes, LogCreationAttributes> implements 
   public readonly updatedAt!: Date;
 
   static associate() {
+    
     Log.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
   }
 }
@@ -61,5 +60,8 @@ Log.init(
     modelName: 'Log',
   }
 );
+
+
+Log.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 export default Log;
