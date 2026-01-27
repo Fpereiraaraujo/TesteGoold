@@ -3,17 +3,14 @@ import { sign } from 'jsonwebtoken';
 import User from '../../models/User'; 
 import { CreateLogService } from '../log/CreateLogService'; 
 
-
 interface IAuthRequest {
   email: string;
   password: string;
 }
 
-
-
 class AuthAdminService {
   async execute({ email, password }: IAuthRequest) {
-   
+    
     const user = await User.findOne({
       where: {
         email: email
@@ -24,7 +21,7 @@ class AuthAdminService {
       throw new Error("Email ou senha incorretos");
     }
 
-    // 2. Verificar a senha
+   
     const passwordMatch = await compare(password, user.password_hash);
 
     if (!passwordMatch) {
@@ -36,12 +33,13 @@ class AuthAdminService {
       {
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        isAdmin: user.isAdmin 
       },
       process.env.JWT_SECRET || "tokensecreto", 
       {
         subject: user.id.toString(),
-        expiresIn: "1d"
+        expiresIn: "30d" 
       }
     );
 
@@ -50,17 +48,20 @@ class AuthAdminService {
     await createLogService.execute({
       user_id: user.id,
       action: "Login",
-      module: "Minha Conta",
-      details: "Usuário realizou login no sistema"
+      module: "Minha Conta", 
+      details: `Usuário ${user.role} realizou login no sistema`
     });
 
  
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role, 
-      token: token
+      token: token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role, 
+        isAdmin: user.isAdmin 
+      }
     };
   }
 }

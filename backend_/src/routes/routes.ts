@@ -12,6 +12,7 @@ import { DetailUserController } from '../controllers/user/DetailUserController';
 import { UpdateUserController } from '../controllers/user/UpdateUserController';
 import { ListClientsController } from '../controllers/user/ListClientsController';
 import { ListAllLogsController } from '../controllers/log/ListAllLogsController';
+import { UpdateAppointmentStatusController } from '../controllers/appointment/UpdateAppointmentStatusController';
 
 
 
@@ -28,6 +29,7 @@ const detailUserController = new DetailUserController();
 const updateUserController = new UpdateUserController();
 const listClientsController = new ListClientsController();
 const listAllLogsController = new ListAllLogsController();
+const updateAppointmentStatusController = new UpdateAppointmentStatusController();
 
 
 
@@ -77,6 +79,12 @@ routes.get(
   "/logs", 
   isAuthenticated, 
   (req, res) => listAllLogsController.handle(req, res)
+);
+
+routes.put(
+  "/agendamentos/status", 
+  isAuthenticated, 
+  (req, res) => updateAppointmentStatusController.handle(req, res)
 );
 
 export { routes };
