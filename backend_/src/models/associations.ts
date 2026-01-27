@@ -1,5 +1,3 @@
-// src/models/associations.ts
-
 import Appointment from './Appointment';
 import { Room } from './Room';
 import { User } from './User';

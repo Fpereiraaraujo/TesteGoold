@@ -9,41 +9,41 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      // --- VÍNCULO COM O CLIENTE (USUÁRIO) ---
+      
       client_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', // Importante: Nome exato da tabela no Banco (Maiúsculo)
+          model: 'Users',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      // --- VÍNCULO COM A SALA ---
+    
       room_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Rooms', // Importante: Nome exato da tabela no Banco (Maiúsculo)
+          model: 'Rooms',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      // --- DATA E HORA ---
+     
       date_time: {
         type: Sequelize.DATE,
         allowNull: false
       },
-      // --- OBSERVAÇÕES ---
+    
       notes: {
-        type: Sequelize.TEXT, // Texto longo para observações
+        type: Sequelize.TEXT, 
         allowNull: true
       },
       status: {
         type: Sequelize.STRING,
-        defaultValue: 'pending' // Valor padrão se não for enviado
+        defaultValue: 'pending'
       },
       createdAt: {
         allowNull: false,

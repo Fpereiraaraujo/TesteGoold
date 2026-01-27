@@ -6,7 +6,6 @@ async function createRooms() {
     await sequelize.authenticate();
     console.log("Conexão estabelecida.");
 
-    // Tenta achar ou criar a Sala 1
     const [room1, created1] = await Room.findOrCreate({
       where: { id: 1 },
       defaults: {
