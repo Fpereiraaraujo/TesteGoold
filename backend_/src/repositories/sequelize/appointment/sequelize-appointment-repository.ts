@@ -10,7 +10,8 @@ export class SequelizeAppointmentRepository implements IAppointmentRepository {
 
     
     async create(data: CreateAppointmentDTO): Promise<Pick<AppointmentAttributes, "id" | "date_time" | "status" | "client_id" | "room_id">> {
-        const appointment = await Appointment.create(data);
+        
+        const appointment = await Appointment.create(data as any);
         return appointment.toJSON(); 
     }
 
