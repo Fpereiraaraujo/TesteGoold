@@ -1,6 +1,6 @@
-=============================================================================
+
                       GOLDSPELL - SISTEMA DE AGENDAMENTOS
-=============================================================================
+
 
 SOBRE O PROJETO
 ---------------
@@ -30,9 +30,9 @@ TECNOLOGIAS UTILIZADAS
 - Criptografia: Bcrypt
 - Logs e Validações internas
 
-=============================================================================
+
                             FUNCIONALIDADES
-=============================================================================
+
 
 1. MÓDULO ADMINISTRATIVO
    - Dashboard com visão geral dos agendamentos.
@@ -52,9 +52,9 @@ TECNOLOGIAS UTILIZADAS
    - Feedback visual via Toasts (Carregando, Sucesso, Erro).
    - Proteção de rotas (Middleware/Contexto de Autenticação).
 
-=============================================================================
+
                         GUIA DE INSTALAÇÃO E EXECUÇÃO
-=============================================================================
+
 
 PRÉ-REQUISITOS
 - Node.js (v18 ou superior)
@@ -113,9 +113,9 @@ PASSO 2: CONFIGURAÇÃO DO FRONTEND
 
    > A aplicação estará disponível em http://localhost:3000
 
-=============================================================================
+
                         REGRAS DE NEGÓCIO IMPLEMENTADAS
-=============================================================================
+
 
 1. AGENDAMENTOS
    - Um cliente não pode solicitar agendamento em data ou horário passado.
@@ -131,9 +131,9 @@ PASSO 2: CONFIGURAÇÃO DO FRONTEND
    - Feedback imediato: O usuário é notificado via "Sonner" sobre o sucesso ou erro de cada ação.
    - Sidebar Responsiva: Em telas pequenas, o menu se oculta e pode ser acionado via botão hambúrguer.
 
-=============================================================================
+
 ESTRUTURA DE PASTAS (RESUMO)
-=============================================================================
+
 
 /backend
   /src
@@ -153,7 +153,7 @@ ESTRUTURA DE PASTAS (RESUMO)
     /contexts     -> Contexto de Autenticação (Login/Logout)
     /services     -> Configuração do Axios (api.ts)
 
-=============================================================================
+
 AUTOR
-=============================================================================
+
 Desenvolvido para o projeto GoldSpell.
