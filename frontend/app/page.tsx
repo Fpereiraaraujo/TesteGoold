@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useContext, FormEvent } from 'react';
-
 import { Eye, EyeSlash, CircleNotch, List } from 'phosphor-react';
 import Link from 'next/link';
 import { AuthContext } from '@/src/contexts/AuthContext';
+import { toast } from 'sonner'; // <--- 1. IMPORTANTE: Importe o toast
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
@@ -15,16 +15,29 @@ export default function Login() {
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password) {
+        toast.warning("Preencha todos os campos");
+        return;
+    }
+
     setLoading(true);
-    await signIn({ email, password });
-    setLoading(false);
+
+    // 2. IMPORTANTE: Adicione o try/catch para pegar o erro de "Conta Desativada"
+    try {
+      await signIn({ email, password });
+      // Se der certo, o AuthContext redireciona o usuário
+    } catch (err: any) {
+      console.log(err);
+      // Aqui vai aparecer a mensagem que configuramos no backend:
+      // "Acesso negado: Sua conta foi desativada pelo administrador."
+      toast.error(err.response?.data?.error || "Erro ao acessar a conta");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="min-h-screen bg-[#f3f4f6] flex flex-col">
-      
-
       <header className="w-full h-20 bg-[#f3f4f6] flex items-center justify-between px-8 border-b border-gray-200/50">
         <div className="flex items-center gap-2">
            <List size={32} weight="bold" className="text-black transform -rotate-45" />
@@ -37,32 +50,25 @@ export default function Login() {
         </Link>
       </header>
 
-      
       <main className="flex-1 flex flex-col items-center justify-center px-4 -mt-10">
-        
         <h1 className="text-2xl font-bold text-gray-900 mb-8">Entre na sua conta</h1>
-
       
         <div className="w-full max-w-[500px] bg-white p-8 rounded-lg shadow-sm border border-gray-100">
           <form onSubmit={handleLogin} className="flex flex-col gap-5">
             
-            
             <div>
-              
               <label className="text-xs font-semibold text-gray-600 mb-1 block">
                 E-mail <span className="text-gray-400 font-normal">(Obrigatório)</span>
               </label>
               <input 
                 type="email"
                 placeholder="Insira seu e-mail"
-             
                 className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-black transition-colors placeholder:text-gray-300"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-     
             <div>
               <label className="text-xs font-semibold text-gray-600 mb-1 block">
                 Senha de acesso <span className="text-gray-400 font-normal">(Obrigatório)</span>
@@ -85,16 +91,14 @@ export default function Login() {
               </div>
             </div>
 
-            
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-black text-white font-medium py-3 rounded mt-2 hover:bg-gray-800 transition-colors flex items-center justify-center"
+              className="w-full bg-black text-white font-medium py-3 rounded mt-2 hover:bg-gray-800 transition-colors flex items-center justify-center disabled:opacity-70"
             >
               {loading ? <CircleNotch size={24} className="animate-spin" /> : "Acessar conta"}
             </button>
 
-            
             <div className="text-center text-xs text-gray-600 mt-2">
               Ainda não tem um cadastro?{' '}
               <Link href="/cadastro" className="font-bold text-black underline hover:no-underline">

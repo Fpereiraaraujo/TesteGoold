@@ -7,11 +7,28 @@ interface IClientRequest {
   email: string;
   password: string;
   zip_code: string;
+  address: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
 }
 
 class CreateClientService {
-  async execute({ name, surname, email, password, zip_code }: IClientRequest) {
-    
+  async execute({ 
+    name, 
+    surname, 
+    email, 
+    password, 
+    zip_code, 
+    address, 
+    number, 
+    complement, 
+    neighborhood, 
+    city, 
+    state 
+  }: IClientRequest) {
     
     const userAlreadyExists = await User.findOne({
       where: { email: email }
@@ -21,16 +38,21 @@ class CreateClientService {
       throw new Error("Este e-mail já está cadastrado.");
     }
 
-    
     const passwordHash = await hash(password, 8);
 
-   
+ 
     const user = await User.create({
       name: name,
       surname: surname,
       email: email,
       password_hash: passwordHash,
       zip_code: zip_code,
+      address: address,          
+      number: number,            
+      complement: complement,    
+      neighborhood: neighborhood,
+      city: city,               
+      state: state,              
       role: 'client', 
       status: true
     });

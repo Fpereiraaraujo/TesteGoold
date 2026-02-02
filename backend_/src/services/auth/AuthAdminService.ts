@@ -21,14 +21,18 @@ class AuthAdminService {
       throw new Error("Email ou senha incorretos");
     }
 
-   
+
+    if (user.status === false) {
+      throw new Error("Acesso negado: Sua conta foi desativada pelo administrador.");
+    }
+
+
     const passwordMatch = await compare(password, user.password_hash);
 
     if (!passwordMatch) {
       throw new Error("Email ou senha incorretos");
     }
 
-   
     const token = sign(
       {
         name: user.name,
@@ -43,7 +47,6 @@ class AuthAdminService {
       }
     );
 
-
     const createLogService = new CreateLogService();
     await createLogService.execute({
       user_id: user.id,
@@ -52,7 +55,6 @@ class AuthAdminService {
       details: `Usuário ${user.role} realizou login no sistema`
     });
 
- 
     return {
       token: token,
       user: {

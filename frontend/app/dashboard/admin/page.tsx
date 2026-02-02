@@ -19,11 +19,10 @@ export default function AdminAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   
 
+  const [searchName, setSearchName] = useState('');
+  const [searchDate, setSearchDate] = useState('');
+
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
-
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
 
   async function fetchAppointments() {
     try {
@@ -42,18 +41,27 @@ export default function AdminAppointmentsPage() {
     fetchAppointments();
   }, []);
 
+ 
+  const filteredAppointments = appointments.filter(app => {
+   
+    const clientName = app.client?.name || '';
+    const matchesName = clientName.toLowerCase().includes(searchName.toLowerCase());
+
+
+    const matchesDate = searchDate ? app.date_time.startsWith(searchDate) : true;
+
+    return matchesName && matchesDate;
+  });
+
   async function handleStatusChange(id: number, newStatus: 'approved' | 'canceled') {
-    
     const promise = api.put('/agendamentos/status', {
       appointment_id: Number(id),
       status: newStatus
     });
 
-   
     toast.promise(promise, {
       loading: 'Atualizando status...',
       success: () => {
-       
         setAppointments(prev => prev.map(app => 
           app.id === id ? { ...app, status: newStatus } : app
         ));
@@ -66,44 +74,45 @@ export default function AdminAppointmentsPage() {
   return (
     <div className="w-full">
       
-      
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Agendamentos</h1>
         <p className="text-gray-500 text-xs mt-1">Acompanhe todos os agendamentos de clientes de forma simples</p>
       </div>
 
-    
       <div className="bg-white border border-gray-200 rounded-lg p-6 min-h-[600px] flex flex-col shadow-sm">
         
-       
+        
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
           
           <div className="flex gap-4 w-full md:w-auto flex-1">
             
-            
+          
             <div className="relative flex-1 max-w-md">
               <MagnifyingGlass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text" 
                 placeholder="Filtre por nome"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)} 
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded text-xs text-gray-700 focus:border-black outline-none transition-colors placeholder:text-gray-300"
               />
             </div>
             
-            
+          
             <div className="w-40 relative">
                <input 
                  type="text" 
                  onFocus={(e) => e.target.type = 'date'}
                  onBlur={(e) => e.target.type = 'text'}
                  placeholder="Selecione"
+                 value={searchDate} 
+                 onChange={(e) => setSearchDate(e.target.value)}
                  className="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded text-xs text-gray-700 focus:border-black outline-none cursor-pointer placeholder:text-gray-300"
                />
                <CalendarBlank size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             </div>
           </div>
 
-         
           <button 
             onClick={() => setIsSettingsModalOpen(true)}
             className="bg-black text-white px-6 py-2.5 rounded text-xs font-bold hover:bg-gray-800 transition-colors shadow-sm"
@@ -112,7 +121,7 @@ export default function AdminAppointmentsPage() {
           </button>
         </div>
 
-        
+     
         <div className="flex-1 overflow-x-auto"> 
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
@@ -127,7 +136,12 @@ export default function AdminAppointmentsPage() {
             <tbody className="text-xs">
               {loading ? (
                  <tr><td colSpan={5} className="py-10 text-center text-gray-400">Carregando...</td></tr>
-              ) : appointments.map((app) => (
+              ) : filteredAppointments.length === 0 ? ( 
+                
+                 <tr><td colSpan={5} className="py-10 text-center text-gray-400">Nenhum agendamento encontrado.</td></tr>
+              ) : (
+              
+                filteredAppointments.map((app) => (
                 <tr 
                   key={app.id} 
                   className={`border-b border-gray-50 hover:opacity-90 transition-colors
@@ -137,12 +151,10 @@ export default function AdminAppointmentsPage() {
                   `}
                 >
                   
-                  
                   <td className="py-4 text-gray-600 font-medium pl-2">
                     {new Date(app.date_time).toLocaleDateString('pt-BR')} às {new Date(app.date_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                   </td>
 
-                 
                   <td className="py-4">
                     <div className="flex flex-col">
                       <span className="font-bold text-gray-900 text-xs">{app.client?.name || 'Cliente'}</span>
@@ -150,14 +162,12 @@ export default function AdminAppointmentsPage() {
                     </div>
                   </td>
 
-                  
                   <td className="py-4 text-center">
                     <span className="bg-black text-white px-4 py-1.5 rounded-full text-[10px] font-bold inline-block shadow-sm">
                       {app.room.name}
                     </span>
                   </td>
 
-                 
                   <td className="py-4 text-center">
                     {app.status === 'pending' && (
                       <span className="border border-gray-300 text-gray-500 bg-white px-4 py-1 rounded-full text-[10px] font-medium shadow-sm">
@@ -176,7 +186,6 @@ export default function AdminAppointmentsPage() {
                     )}
                   </td>
 
-                  
                   <td className="py-4 text-right pr-2">
                     <div className="flex justify-end gap-2">
                       
@@ -209,19 +218,17 @@ export default function AdminAppointmentsPage() {
                         </button>
                       )}
 
-                      
                       {app.status === 'canceled' && null}
 
                     </div>
                   </td>
 
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
 
-       
         <div className="mt-auto pt-6 flex justify-center items-center gap-2">
           <button className="p-2 rounded hover:bg-gray-100 text-gray-400 hover:text-black transition-colors">
             <CaretLeft size={16} weight="bold" />
@@ -238,7 +245,6 @@ export default function AdminAppointmentsPage() {
 
       </div>
 
-  
       <ScheduleSettingsModal 
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
