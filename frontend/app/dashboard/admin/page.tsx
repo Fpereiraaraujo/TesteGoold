@@ -27,7 +27,7 @@ export default function AdminAppointmentsPage() {
   async function fetchAppointments() {
     try {
       setLoading(true);
-      const response = await api.get('/agendamentos'); 
+      const response = await api.get('/agendamentos');
       setAppointments(response.data);
     } catch (err) {
       console.log(err);
@@ -43,12 +43,25 @@ export default function AdminAppointmentsPage() {
 
  
   const filteredAppointments = appointments.filter(app => {
-   
+  
     const clientName = app.client?.name || '';
     const matchesName = clientName.toLowerCase().includes(searchName.toLowerCase());
 
+ 
+    let matchesDate = true;
+    if (searchDate) {
+      const appDate = new Date(app.date_time);
+      
+    
+      const localDay = String(appDate.getDate()).padStart(2, '0');
+      const localMonth = String(appDate.getMonth() + 1).padStart(2, '0'); 
+      const localYear = appDate.getFullYear();
 
-    const matchesDate = searchDate ? app.date_time.startsWith(searchDate) : true;
+     
+      const formattedAppDate = `${localYear}-${localMonth}-${localDay}`;
+      
+      matchesDate = formattedAppDate === searchDate;
+    }
 
     return matchesName && matchesDate;
   });
@@ -67,7 +80,7 @@ export default function AdminAppointmentsPage() {
         ));
         return `Agendamento ${newStatus === 'approved' ? 'aprovado' : 'cancelado'} com sucesso!`;
       },
-      error: 'Erro ao atualizar o status. Tente novamente.'
+      error: 'Erro ao atualizar o status.'
     });
   }
 
@@ -81,19 +94,19 @@ export default function AdminAppointmentsPage() {
 
       <div className="bg-white border border-gray-200 rounded-lg p-6 min-h-[600px] flex flex-col shadow-sm">
         
-        
+    
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
           
           <div className="flex gap-4 w-full md:w-auto flex-1">
             
-          
+        
             <div className="relative flex-1 max-w-md">
               <MagnifyingGlass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text" 
                 placeholder="Filtre por nome"
                 value={searchName}
-                onChange={(e) => setSearchName(e.target.value)} 
+                onChange={(e) => setSearchName(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded text-xs text-gray-700 focus:border-black outline-none transition-colors placeholder:text-gray-300"
               />
             </div>
@@ -105,7 +118,7 @@ export default function AdminAppointmentsPage() {
                  onFocus={(e) => e.target.type = 'date'}
                  onBlur={(e) => e.target.type = 'text'}
                  placeholder="Selecione"
-                 value={searchDate} 
+                 value={searchDate}
                  onChange={(e) => setSearchDate(e.target.value)}
                  className="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded text-xs text-gray-700 focus:border-black outline-none cursor-pointer placeholder:text-gray-300"
                />
@@ -121,7 +134,7 @@ export default function AdminAppointmentsPage() {
           </button>
         </div>
 
-     
+
         <div className="flex-1 overflow-x-auto"> 
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
@@ -137,10 +150,8 @@ export default function AdminAppointmentsPage() {
               {loading ? (
                  <tr><td colSpan={5} className="py-10 text-center text-gray-400">Carregando...</td></tr>
               ) : filteredAppointments.length === 0 ? ( 
-                
                  <tr><td colSpan={5} className="py-10 text-center text-gray-400">Nenhum agendamento encontrado.</td></tr>
               ) : (
-              
                 filteredAppointments.map((app) => (
                 <tr 
                   key={app.id} 
