@@ -54,7 +54,7 @@ Room.init(
   },
   {
     sequelize,
-    tableName: 'rooms', 
+    tableName: 'Rooms', 
     modelName: 'Room',
   }
 );

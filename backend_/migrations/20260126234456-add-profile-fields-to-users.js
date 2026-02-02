@@ -3,48 +3,48 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('users', 'surname', {
+    await queryInterface.addColumn('Users', 'surname', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'zip_code', {
+    await queryInterface.addColumn('Users', 'zip_code', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'address', {
+    await queryInterface.addColumn('Users', 'address', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'number', {
+    await queryInterface.addColumn('Users', 'number', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'complement', {
+    await queryInterface.addColumn('Users', 'complement', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'neighborhood', {
+    await queryInterface.addColumn('Users', 'neighborhood', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'city', {
+    await queryInterface.addColumn('Users', 'city', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('users', 'state', {
+    await queryInterface.addColumn('Users', 'state', {
       type: Sequelize.STRING,
       allowNull: true,
     });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn('users', 'surname');
-    await queryInterface.removeColumn('users', 'zip_code');
-    await queryInterface.removeColumn('users', 'address');
-    await queryInterface.removeColumn('users', 'number');
-    await queryInterface.removeColumn('users', 'complement');
-    await queryInterface.removeColumn('users', 'neighborhood');
-    await queryInterface.removeColumn('users', 'city');
-    await queryInterface.removeColumn('users', 'state');
+    await queryInterface.removeColumn('Users', 'surname');
+    await queryInterface.removeColumn('Users', 'zip_code');
+    await queryInterface.removeColumn('Users', 'address');
+    await queryInterface.removeColumn('Users', 'number');
+    await queryInterface.removeColumn('Users', 'complement');
+    await queryInterface.removeColumn('Users', 'neighborhood');
+    await queryInterface.removeColumn('Users', 'city');
+    await queryInterface.removeColumn('Users', 'state');
   }
 };

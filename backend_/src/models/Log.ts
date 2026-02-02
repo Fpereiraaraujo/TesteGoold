@@ -56,7 +56,7 @@ Log.init(
   },
   {
     sequelize,
-    tableName: 'logs',
+    tableName: 'Logs',
     modelName: 'Log',
   }
 );

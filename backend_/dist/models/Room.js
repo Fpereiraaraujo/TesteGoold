@@ -33,6 +33,6 @@ Room.init({
     },
 }, {
     sequelize: database_1.sequelize,
-    tableName: 'rooms',
+    tableName: 'Rooms',
     modelName: 'Room',
 });

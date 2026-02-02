@@ -34,7 +34,7 @@ Log.init({
     }
 }, {
     sequelize: database_1.sequelize,
-    tableName: 'logs',
+    tableName: 'Logs',
     modelName: 'Log',
 });
 Log.belongsTo(User_1.User, { foreignKey: 'user_id', as: 'user' });
